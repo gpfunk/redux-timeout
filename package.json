@@ -1,5 +1,5 @@
 {
-  "name": "redux-session-timeout",
+  "name": "redux-timeout",
   "version": "0.1.0",
   "description": "Client side session timeout monitoring for redux",
   "main": "lib/index.js",
