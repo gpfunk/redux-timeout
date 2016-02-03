@@ -1,0 +1,36 @@
+{
+  "name": "redux-session-timeout",
+  "version": "0.1.0",
+  "description": "Client side session timeout monitoring for redux",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "mocha --compilers js:babel-register --recursive",
+    "build": "mkdir -p lib && babel ./src/index.js --out-file ./lib/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gpfunk/redux-timeout.git"
+  },
+  "keywords": [
+    "redux",
+    "timeout",
+    "session",
+    "session-timeout",
+    "middleware"
+  ],
+  "author": "Graeme Funk <g.funk87@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/gpfunk/redux-timeout#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "babel": "^6.3.26",
+    "babel-cli": "^6.4.5",
+    "babel-core": "^6.4.5",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-register": "^6.4.3",
+    "expect": "^1.14.0",
+    "mocha": "^2.4.5",
+    "redux": "^3.2.0",
+    "webpack": "^1.12.12"
+  }
+}
