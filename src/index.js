@@ -74,11 +74,12 @@ const reduxTimeout = (threshold, action, toDispatch) => {
     trigger(action.type)
     trigger(WATCH_ALL)
 
-    if (action.type === REMOVE_WATCHED) {
-      remove(action.action)
+    if (action.type === REMOVE_WATCHED && action.payload && action.payload.action) {
+      remove(action.payload.action)
     }
-    if (action.type === ADD_WATCHED) {
-      add(action.threshold, action.action, action.toDispatch)
+    if (action.type === ADD_WATCHED && action.payload) {
+      let { payload } = action
+      add(payload.threshold, payload.action, payload.toDispatch)
     }
     return next(action)
   }

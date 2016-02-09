@@ -47,32 +47,40 @@ describe('reduxTimeout', () => {
     it ('should not add an action to watch', () => {
       store.dispatch({
         type: ADD_WATCHED,
-        threshold: 1000
+        payload: {
+          threshold: 1000
+        }
       })
       expect(_watch['TEST']).toNotExist()
     })
     it ('should not add an action to watch', () => {
       store.dispatch({
         type: ADD_WATCHED,
-        threshold: 1000,
-        action: 'TEST'
+        payload: {
+          threshold: 1000,
+          action: 'TEST'
+        }
       })
       expect(_watch['TEST']).toNotExist()
     })
-    it ('creates new watched action', () => {
+    it ('should add an action to watch', () => {
       store.dispatch({
         type: ADD_WATCHED,
-        threshold: 1000,
-        action: 'TEST',
-        toDispatch: trigger
+        payload: {
+          threshold: 1000,
+          action: 'TEST',
+          toDispatch: trigger
+        }
       })
       expect(_watch['TEST']).toExist()
     })
-    it ('removes a watched action', () => {
+    it ('should remove a watched action', () => {
       expect(_watch['TEST']).toExist()
       store.dispatch({
         type: REMOVE_WATCHED,
-        action: 'TEST'
+        payload: {
+          action: 'TEST'
+        }
       })
       expect(_watch['TEST']).toNotExist()
     })
