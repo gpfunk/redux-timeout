@@ -5,8 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "mocha --compilers js:babel-register --recursive",
-    "build": "mkdir -p lib && babel ./src/index.js --out-file ./lib/index.js",
-    "prepublish": "npm run build"
+    "build": "mkdir -p lib && babel ./src/index.js --out-file ./lib/index.js"
   },
   "repository": {
     "type": "git",
