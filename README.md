@@ -1,7 +1,5 @@
 Timeout middleware for Redux.
 
-**Still in Development**
-
 Installation
 ---
 ```
