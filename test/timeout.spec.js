@@ -1,5 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import expect from 'expect'
+import thunk from 'redux-thunk'
 import { reduxTimeout, _watch, ADD_WATCHED, REMOVE_WATCHED, WATCH_ALL } from '../src/index'
 
 function reducer (state = {}, action) {
@@ -15,6 +16,14 @@ function trigger () {
   }
 }
 
+function asyncTrigger (id) {
+  return dispatch => {
+    dispatch({
+      type: 'TRIGGERED'
+    })
+  }
+}
+
 describe('reduxTimeout', () => {
   describe('middleware initialization', () => {
     it ('initializes the middlware without a watched action', () => {
@@ -22,15 +31,15 @@ describe('reduxTimeout', () => {
       expect(_watch).toEqual({})
     })
     it ('initializes the middleware with a watched action', () => {
-      const store = createStore(reducer, applyMiddleware(reduxTimeout(5000, 'WATCH', trigger)))
+      const store = createStore(reducer, applyMiddleware(reduxTimeout(5000, 'WATCH', trigger())))
       expect(_watch['WATCH']).toExist()
     })
     it ('initializes the middleware with the WATCH_ALL action', () => {
-      const store = createStore(reducer, applyMiddleware(reduxTimeout(5000, WATCH_ALL, trigger)))
+      const store = createStore(reducer, applyMiddleware(reduxTimeout(5000, WATCH_ALL, trigger())))
       expect(_watch[WATCH_ALL]).toExist()
     })
     it ('initializes the middleware with an array', () => {
-      const store = createStore(reducer, applyMiddleware(reduxTimeout(5000, ['WATCH', 'WATCHTWO'], trigger)))
+      const store = createStore(reducer, applyMiddleware(reduxTimeout(5000, ['WATCH', 'WATCHTWO'], trigger())))
       expect(_watch['WATCH']).toExist()
       expect(_watch['WATCHTWO']).toExist()
       expect(_watch['WATCHTHREE']).toNotExist()
@@ -69,7 +78,7 @@ describe('reduxTimeout', () => {
         payload: {
           threshold: 1000,
           action: 'TEST',
-          toDispatch: trigger
+          toDispatch: trigger()
         }
       })
       expect(_watch['TEST']).toExist()
@@ -97,7 +106,24 @@ describe('reduxTimeout', () => {
             return
         }
       }
-      const store = createStore(reducer, applyMiddleware(reduxTimeout(1000, 'TEST_TRIGGER', trigger)))
+      const store = createStore(reducer, applyMiddleware(reduxTimeout(1000, 'TEST_TRIGGER', trigger())))
+      setTimeout(() => {
+        store.dispatch({ type: 'TEST_TRIGGER' })
+        done()
+      }, 1100)
+    })
+    it ('triggers an async action', (done) => {
+      function reducer (state = {}, action ) {
+        switch(action.type) {
+          case 'TRIGGERED':
+            done()
+          case 'TEST_TRIGGER':
+            throw new Error('Did not trigger action')
+          default:
+            return
+        }
+      }
+      const store = createStore(reducer, applyMiddleware(thunk, reduxTimeout(1000, 'TEST_TRIGGER', asyncTrigger(1))))
       setTimeout(() => {
         store.dispatch({ type: 'TEST_TRIGGER' })
         done()
@@ -112,7 +138,7 @@ describe('reduxTimeout', () => {
             return
         }
       }
-      const store = createStore(reducer, applyMiddleware(reduxTimeout(1000, 'TEST_TRIGGER', trigger)))
+      const store = createStore(reducer, applyMiddleware(reduxTimeout(1000, 'TEST_TRIGGER', trigger())))
       setTimeout(() => {
         store.dispatch({ type: 'TEST_TRIGGER' })
         done()
@@ -131,7 +157,7 @@ describe('reduxTimeout', () => {
             return
         }
       }
-      const store = createStore(reducer, applyMiddleware(reduxTimeout(1000, WATCH_ALL, trigger)))
+      const store = createStore(reducer, applyMiddleware(reduxTimeout(1000, WATCH_ALL, trigger())))
       setTimeout(() => {
         store.dispatch({ type: 'TEST_TRIGGER' })
         done()
@@ -146,7 +172,7 @@ describe('reduxTimeout', () => {
             return
         }
       }
-      const store = createStore(reducer, applyMiddleware(reduxTimeout(1000, WATCH_ALL, trigger)))
+      const store = createStore(reducer, applyMiddleware(reduxTimeout(1000, WATCH_ALL, trigger())))
       setTimeout(() => {
         store.dispatch({ type: 'TEST_TRIGGER' })
         done()

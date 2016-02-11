@@ -64,7 +64,7 @@ const reduxTimeout = (threshold, action, toDispatch) => {
         // if the threshold has been reached, dispatch the action
         if (now - monitor.lastAction > monitor.threshold && !monitor.dispatching) {
           monitor.dispatching = true
-          store.dispatch(monitor.toDispatch())
+          store.dispatch(monitor.toDispatch)
         }
         monitor.lastAction = now
         monitor.dispatching = false
