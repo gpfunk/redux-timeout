@@ -1,5 +1,7 @@
 Timeout middleware for Redux.
 
+**Still in Development**
+
 Installation
 ---
 ```
@@ -27,7 +29,7 @@ import { reduxTimeout } from 'redux-timeout'
 const store = createStore(reducer, applyMiddleware(reduxTimeout()))
 ```
 
-Initialize the middleware with 1 action (ACTION_TO_WATCH) being watched, with a 5000 ms threshold, and dispatching the action created from the trigger action creator if that threshold is met
+Initialize the middleware with 1 action (ACTION_TO_WATCH) being watched, a 5000 ms threshold, and dispatching the action returned from the trigger function if that threshold is met
 ```
 import { reduxTimeout } from 'redux-timeout'
 import { ACTION_TO_WATCH } from '/path/to/my/action/constants'
@@ -96,8 +98,8 @@ REMOVE_WATCHED: removing an action from being watched
 ```
 reduxTimeout([threshold], [ACTION_TO_WATCH], [ACTION_TO_DISPATCH])
 ```
-threshold: time in ms.  If the duration since the last ACTION_TO_WATCH dispatch (or initialization of it being watched) is > then this threshold, then ACTION_TO_DISPATCH will be dispatched
+**threshold**: time in ms.  If the duration since the last ACTION_TO_WATCH dispatch (or initialization of it being watched) is > then this threshold, then ACTION_TO_DISPATCH will be dispatched
 
-ACTION_TO_WATCH: String -- action to watch for.
+**ACTION_TO_WATCH**: String -- action to watch for.
 
-ACTION_TO_DISPATCH: Object / Function -- action to dispatch if threshold is passed.  Can use with any redux side effects middleware, eg. redux-thunk, redux-promise etc.
+**ACTION_TO_DISPATCH**: Object / Function -- action to dispatch if threshold is passed.  Can use with any redux side effects middleware, eg. redux-thunk, redux-promise etc.
