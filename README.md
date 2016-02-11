@@ -27,13 +27,13 @@ import { reduxTimeout } from 'redux-timeout'
 const store = createStore(reducer, applyMiddleware(reduxTimeout()))
 ```
 
-Initialize the middleware with 1 action (ACTION_TO_WATCH) being watched, with a 5000 ms threshold, and dispatching the trigger action creator if that threshold is met
+Initialize the middleware with 1 action (ACTION_TO_WATCH) being watched, with a 5000 ms threshold, and dispatching the action created from the trigger action creator if that threshold is met
 ```
 import { reduxTimeout } from 'redux-timeout'
 import { ACTION_TO_WATCH } from '/path/to/my/action/constants'
 import { trigger } from '/path/to/my/action/creators'
 
-const store = createStore(reducer, applyMiddleware(reduxTimeout(5000, ACTION_TO_WATCH, trigger)))
+const store = createStore(reducer, applyMiddleware(reduxTimeout(5000, ACTION_TO_WATCH, trigger())))
 ```
 
 Initialize the middleware with multiple actions being watched
@@ -42,14 +42,14 @@ import { reduxTimeout } from 'redux-timeout'
 import { ACTION_TO_WATCH, ACTION_TO_WATCH_TWO } from '/path/to/my/action/constants'
 import { trigger } from '/path/to/my/action/creators'
 
-const store = createStore(reducer, applyMiddleware(reduxTimeout(5000, [ ACTION_TO_WATCH, ACTION_TO_WATCH_TWO ], trigger)))
+const store = createStore(reducer, applyMiddleware(reduxTimeout(5000, [ ACTION_TO_WATCH, ACTION_TO_WATCH_TWO ], trigger())))
 ```
 
 Initialize the middleware watching for any and all actions
 ```
 import { reduxTimeout, WATCH_ALL } from 'redux-timeout'
 
-const store = createStore(reducer, applyMiddleware(reduxTimeout(5000, WATCH_ALL, trigger)))
+const store = createStore(reducer, applyMiddleware(reduxTimeout(5000, WATCH_ALL, trigger())))
 ```
 
 Dynamically add action to be watched (using direct action rather than action creator)
