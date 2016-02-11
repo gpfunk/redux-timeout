@@ -16,6 +16,7 @@
     "redux",
     "timeout",
     "session",
+    "auto-save",
     "session-timeout",
     "middleware"
   ],
