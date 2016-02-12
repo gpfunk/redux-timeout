@@ -12,6 +12,10 @@
     "type": "git",
     "url": "git+https://github.com/gpfunk/redux-timeout.git"
   },
+  "files": [
+    "lib",
+    "src"
+  ],
   "keywords": [
     "redux",
     "timeout",
