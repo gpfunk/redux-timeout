@@ -53,11 +53,11 @@ addTimeout(timeout, ACTION_TO_WATCH, ACTION_TO_DISPATCH)
 ```
 **Arguments**
 
-+ **timeout** (Integer): time in ms.  If the time since the last dispatch of ACTION_TO_WATCH (or initialization of it being watched) is > threshold, ACTION_TO_DISPATCH will be dispatched
++ **timeout** (Integer): time in ms.  Uses this value when initializing the setTimeout.  This setTimeout will be cleared and recreated on any dispatches of ACTION_TO_WATCH.
 
-+ **ACTION_TO_WATCH** (String): action to watch for.
++ **ACTION_TO_WATCH** (String): action to watch for. See purpose above.
 
-+ **ACTION_TO_DISPATCH** (Object / Function): action to dispatch if threshold is passed.  Can use with any redux side effects middleware, eg. redux-thunk, redux-promise etc.
++ **ACTION_TO_DISPATCH** (Object / Function): action to dispatch when the setTimeout is triggered.  Can use with any redux side effects middleware, eg. redux-thunk, redux-promise etc.
 
 ```
 removeTimeout(ACTION_TO_REMOVE)
