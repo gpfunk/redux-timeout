@@ -10,7 +10,7 @@ What is it?
 ---
 Gives ability to dispatch actions if certain actions have not been dispatched in x amount of time.
 
-[redux-effects-timeout](https://github.com/redux-effects/redux-effects-timeout) is a similar library to work with timeouts in redux.  The main difference is this library will watch for actions as they are dispatched and reset the setTimeout accordingly.  If you are just looking for a way to dispatch actions after a certain period of time, redux-effects-timeout should be perfectly fine for you.
+[redux-effects-timeout](https://github.com/redux-effects/redux-effects-timeout) is a similar library to work with timeouts in redux.  The main difference between the 2, is this library (redux-timeout) will watch for actions as they are dispatched and reset the setTimeout accordingly.  If you are just looking for a way to dispatch actions after a certain period of time, redux-effects-timeout should be perfectly fine for you.
 
 Why?
 ---
