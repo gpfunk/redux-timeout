@@ -35,10 +35,16 @@ const reduxTimeout = () => {
     const update = (action) => {
       // check if object is being monitored at the moment
       let monitor = watch[action]
+      if (monitor && monitor.dispatching) {
+        monitor.dispatching = false
+        return
+      }
+
       if (monitor) {
         clearTimeout(monitor.timeoutId)
         
         let timeoutId = setTimeout(() => {
+          monitor.dispatching = true
           store.dispatch(monitor.toDispatch)
         }, monitor.timeout)
 
@@ -57,16 +63,19 @@ const reduxTimeout = () => {
         return new Error('Expected toDispatch to be an object or a function that would return an object')
       }
 
-      let timeoutId = setTimeout(() => {
-        store.dispatch(toDispatch)
-      }, timeout)
-
       // ensures all objects are watching the same object
       const monitor = {
         timeout,
         toDispatch,
-        timeoutId
+        dispatching: false
       }
+
+      let timeoutId = setTimeout(() => {
+        monitor.dispatching = true
+        store.dispatch(monitor.toDispatch)
+      }, monitor.timeout)
+
+      monitor.timeoutId = timeoutId
 
       const addAction = (action) => {
         if (typeof action !== 'string') {
@@ -93,9 +102,6 @@ const reduxTimeout = () => {
       }
     }
 
-    update(action.type)
-    update(WATCH_ALL)
-
     if (action.type === REMOVE_TIMEOUT && action.payload.action) {
       remove(action.payload.action)
     }
@@ -104,6 +110,10 @@ const reduxTimeout = () => {
       let { payload } = action
       add({ timeout: payload.timeout, action: payload.action, toDispatch: payload.toDispatch })
     }
+
+    update(action.type)
+    update(WATCH_ALL)
+
     return next(action)
   }
 }

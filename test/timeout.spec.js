@@ -29,17 +29,45 @@ describe('reduxTimeout', () => {
     it ('triggers an action', (done) => {
       var id = setTimeout(() => {
         store.dispatch({ type: 'TEST_TRIGGER' })
-        clearTimeout(id)
-        done()
       }, 1200)
+
       function reducer (state = {}, action ) {
         switch(action.type) {
           case 'TRIGGERED':
             clearTimeout(id)
             done()
+            break
           case 'TEST_TRIGGER':
             clearTimeout(id)
             throw new Error('Did not trigger action')
+            break
+          default:
+            return
+        }
+      }
+      const store = createStore(reducer, applyMiddleware(reduxTimeout()))
+      store.dispatch(addTimeout(1000, 'TEST_TRIGGER', trigger()))
+    })
+    it ('only triggers action once', function(done) {
+      this.timeout(3100)
+
+      var id = setTimeout(() => {
+        store.dispatch({ type: 'TEST_TRIGGER' })
+      }, 3000)
+
+      let count = 0
+      function reducer (state = {}, action ) {
+        switch(action.type) {
+          case 'TRIGGERED':
+            if (++count > 1) {
+              clearTimeout(id)
+              throw new Error('Dispatched action twice')
+              done()
+            }
+            break
+          case 'TEST_TRIGGER':
+            clearTimeout(id)
+            done()
           default:
             return
         }
@@ -50,9 +78,8 @@ describe('reduxTimeout', () => {
     it ('triggers an async action', (done) => {
       var id = setTimeout(() => {
         store.dispatch({ type: 'TEST_TRIGGER' })
-        clearTimeout(id)
-        done()
       }, 1700)
+
       function reducer (state = {}, action ) {
         switch(action.type) {
           case 'TRIGGERED':
@@ -71,10 +98,10 @@ describe('reduxTimeout', () => {
     it ('does not trigger an action', (done) => {
       var id = setTimeout(() => {
         store.dispatch({ type: 'TEST_TRIGGER' })
-        clearTimeout(id)
         store.dispatch(removeTimeout('TEST_TRIGGER'))
         done()
       }, 900)
+
       function reducer (state = {}, action ) {
         switch(action.type) {
           case 'TRIGGERED':
@@ -85,16 +112,15 @@ describe('reduxTimeout', () => {
         }
       }
       const store = createStore(reducer, applyMiddleware(reduxTimeout()))
-      store.dispatch(addTimeout(1000, 'TEST_TRIGGER', trigger()))
+      store.dispatch(addTimeout(1200, 'TEST_TRIGGER', trigger()))
     })
   })
   describe('WATCH_ALL', () => {
     it ('WATCH_ALL triggers an action', (done) => {
       var id = setTimeout(() => {
         store.dispatch({ type: 'TEST_TRIGGER' })
-        clearTimeout(id)
-        done()
       }, 1100)
+
       function reducer (state = {}, action ) {
         switch(action.type) {
           case 'TRIGGERED':
@@ -116,6 +142,7 @@ describe('reduxTimeout', () => {
         clearTimeout(id)
         done()
       }, 900)
+
       function reducer (state = {}, action ) {
         switch(action.type) {
           case 'TRIGGERED':
