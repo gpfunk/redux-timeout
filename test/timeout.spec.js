@@ -114,6 +114,27 @@ describe('reduxTimeout', () => {
       const store = createStore(reducer, applyMiddleware(reduxTimeout()))
       store.dispatch(addTimeout(1200, 'TEST_TRIGGER', trigger()))
     })
+    it ('does not trigger any actions', (done) => {
+      const actions = ['TEST_TRIGGER_1', 'TEST_TRIGGER_2', 'TEST_TRIGGER_3'];
+
+      var id = setTimeout(() => {
+        store.dispatch({ type: 'TEST_TRIGGER_2' })
+        store.dispatch(removeTimeout(actions))
+        done()
+      }, 900)
+
+      function reducer (state = {}, action ) {
+        switch(action.type) {
+          case 'TRIGGERED':
+            clearTimeout(id)
+            throw new Error('Triggered action')
+          default:
+            return
+        }
+      }
+      const store = createStore(reducer, applyMiddleware(reduxTimeout()))
+      store.dispatch(addTimeout(1200, actions, trigger()))
+    })
   })
   describe('WATCH_ALL', () => {
     it ('WATCH_ALL triggers an action', (done) => {
@@ -156,4 +177,5 @@ describe('reduxTimeout', () => {
       store.dispatch(addTimeout(1000, WATCH_ALL, trigger()))
     })
   })
+
 })
