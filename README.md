@@ -25,13 +25,13 @@ Usage
 Checkout the tests for further examples.
 
 Initialize the middleware
-```
+```javascript
 import { reduxTimeout } from 'redux-timeout'
 const store = createStore(reducer, applyMiddleware(reduxTimeout()))
 ```
 
 Add action to be watched
-```
+```javascript
 import { addTimeout } from 'redux-timeout'
 import { ACTION_TO_WATCH, TRIGGER } from '/path/to/my/action/constants'
 
@@ -39,7 +39,7 @@ dispatch(addTimeout(1000, ACTION_TO_WATCH, { type: TRIGGER })
 ```
 
 Remove action being watched
-```
+```javascript
 import { removeTimeout } from 'redux-timeout'
 import { ACTION_TO_WATCH } from '/path/to/my/action/constants'
 
@@ -48,23 +48,23 @@ dispatch(removeTimeout(ACTION_TO_WATCH))
 
 API
 ---
-```
+```javascript
 addTimeout(timeout, ACTION_TO_WATCH, ACTION_TO_DISPATCH)
 ```
 **Arguments**
 
 + **timeout** (Integer): time in ms.  Uses this value when initializing the setTimeout.  This setTimeout will be cleared and recreated on any dispatches of ACTION_TO_WATCH.
 
-+ **ACTION_TO_WATCH** (String): action to watch for. See purpose above.
++ **ACTION_TO_WATCH** (String | Array): action to watch for. See purpose above.
 
-+ **ACTION_TO_DISPATCH** (Object / Function): action to dispatch when the setTimeout is triggered.  Can use with any redux side effects middleware, eg. redux-thunk, redux-promise etc.
++ **ACTION_TO_DISPATCH** (Object | Function): action to dispatch when the setTimeout is triggered.  Can use with any redux side effects middleware, eg. redux-thunk, redux-promise etc.
 
-```
+```javascript
 removeTimeout(ACTION_TO_REMOVE)
 ```
 **Arguments**
 
-+ **ACTION_TO_REMOVE** (String): action to remove from the watched list
++ **ACTION_TO_REMOVE** (String | Array): action to remove from the watched list
 
 **Constants**
 
