@@ -103,7 +103,13 @@ const reduxTimeout = () => {
     }
 
     if (action.type === REMOVE_TIMEOUT && action.payload.action) {
-      remove(action.payload.action)
+      if (action.payload.action instanceof Array) {
+        action.payload.action.forEach((a) => {
+          remove(a)
+        })
+      } else {
+        remove(action.payload.action)
+      }
     }
 
     if (action.type === ADD_TIMEOUT && action.payload.action) {
