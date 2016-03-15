@@ -2,13 +2,13 @@ const ADD_TIMEOUT = '@@reduxTimeout/ADD_TIMEOUT'
 const REMOVE_TIMEOUT = '@@reduxTimeout/REMOVE_TIMEOUT'
 const WATCH_ALL = '@@reduxTimeout/WATCH_ALL'
 
-const addTimeout = (timeout, action, toDispatch) => {
+const addTimeout = (timeout, action, toCall) => {
   return {
     type: ADD_TIMEOUT,
     payload: {
       timeout,
       action,
-      toDispatch
+      toCall
     }
   }
 }
@@ -26,7 +26,7 @@ const removeTimeout = (action) => {
  * dispatches an action if an action has not been dispatched within the specified threshold
  * @param  {Number} threshold The time in ms to allow before dispatching an action
  * @param {String | [String]} action The action, or array of actions, to monitor
- * @param {Function} toDispatch An action creator, lib agnostic (redux-thunk, redux-promise etc.)
+ * @param {Function} toCall An action creator, lib agnostic (redux-thunk, redux-promise etc.)
  */
 const reduxTimeout = () => {
   let watch = {}
@@ -38,37 +38,28 @@ const reduxTimeout = () => {
 
       if (monitor) {
         clearTimeout(monitor.timeoutId)
-        
-        let timeoutId = setTimeout(() => {
-          store.dispatch(monitor.toDispatch)
-        }, monitor.timeout)
-
-        monitor.timeoutId = timeoutId
+        monitor.timeoutId = setTimeout(monitor.toCall, monitor.timeout)
       }
     } 
 
-    const add = ({ timeout, action, toDispatch }) => {
+    const add = ({ timeout, action, toCall }) => {
       if (typeof timeout !== 'number') {
         return new Error('Expected timeout to be a number')
       }
       if (typeof action !== 'string' && !(action instanceof Array)) {
         return new Error('Expected action to be a string or an array')
       }
-      if (typeof toDispatch !== 'object' && typeof toDispatch !== 'function') {
-        return new Error('Expected toDispatch to be an object or a function that would return an object')
+      if (typeof toCall !== 'object' && typeof toCall !== 'function') {
+        return new Error('Expected toCall to be an object or a function that would return an object')
       }
 
       // ensures all objects are watching the same object
       const monitor = {
         timeout,
-        toDispatch,
+        toCall
       }
 
-      let timeoutId = setTimeout(() => {
-        store.dispatch(monitor.toDispatch)
-      }, monitor.timeout)
-
-      monitor.timeoutId = timeoutId
+      monitor.timeoutId = setTimeout(monitor.toCall, monitor.timeout)
 
       const addAction = (action) => {
         if (typeof action !== 'string') {
@@ -84,7 +75,6 @@ const reduxTimeout = () => {
       } else {
         addAction(action)
       }
-
     }
 
     const remove = (action) => {
@@ -107,7 +97,7 @@ const reduxTimeout = () => {
 
     if (action.type === ADD_TIMEOUT && action.payload.action) {
       let { payload } = action
-      add({ timeout: payload.timeout, action: payload.action, toDispatch: payload.toDispatch })
+      add(action.payload)
     }
 
     update(action.type)

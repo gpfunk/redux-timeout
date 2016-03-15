@@ -8,7 +8,7 @@ npm install --save redux-timeout
 
 What is it?
 ---
-Gives ability to dispatch actions if certain actions have not been dispatched in x amount of time.
+Gives ability to call functions if certain actions have not been dispatched in x amount of time.
 
 [redux-effects-timeout](https://github.com/redux-effects/redux-effects-timeout) is a similar library to work with timeouts in redux.  The main difference between the 2, is this library (redux-timeout) will watch for actions as they are dispatched and reset the setTimeout accordingly.  If you are just looking for a way to dispatch actions after a certain period of time, redux-effects-timeout should be perfectly fine for you.
 
@@ -22,7 +22,7 @@ Example 2. In a live editing document, if no actions have been dispatched from a
 
 Usage
 ---
-Checkout the tests for further examples.
+Checkout the tests / examples folder for further examples.
 
 Initialize the middleware
 ```javascript
@@ -33,9 +33,27 @@ const store = createStore(reducer, applyMiddleware(reduxTimeout()))
 Add action to be watched
 ```javascript
 import { addTimeout } from 'redux-timeout'
-import { ACTION_TO_WATCH, TRIGGER } from '/path/to/my/action/constants'
+import { ACTION_TO_WATCH, SAVE } from '/path/to/my/action/constants'
 
-dispatch(addTimeout(1000, ACTION_TO_WATCH, { type: TRIGGER })
+...
+
+componentDidMount() {
+  const { addTimeout, save } = this.props
+  addTimeout(1000, ACTION_TO_WATCH, save)  
+}
+
+...
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addTimeout: (timeout, action, fn) => {
+      dispatch(addTimeout(timeout, action, fn))
+    },
+    save: () => {
+      dispatch({ type: SAVE })
+    }
+  }
+}
 ```
 
 Remove action being watched
@@ -43,21 +61,26 @@ Remove action being watched
 import { removeTimeout } from 'redux-timeout'
 import { ACTION_TO_WATCH } from '/path/to/my/action/constants'
 
+...
+
 dispatch(removeTimeout(ACTION_TO_WATCH))
+
+...
+
 ```
 
 API
 ---
 ```javascript
-addTimeout(timeout, ACTION_TO_WATCH, ACTION_TO_DISPATCH)
+addTimeout(timeout, ACTION_TO_WATCH, functionToCall)
 ```
 **Arguments**
 
 + **timeout** (Integer): time in ms.  Uses this value when initializing the setTimeout.  This setTimeout will be cleared and recreated on any dispatches of ACTION_TO_WATCH.
 
-+ **ACTION_TO_WATCH** (String | Array): action to watch for. See purpose above.
++ **ACTION_TO_WATCH** (String | Array): action or array of actions to watch for. See purpose above.
 
-+ **ACTION_TO_DISPATCH** (Object | Function): action to dispatch when the setTimeout is triggered.  Can use with any redux side effects middleware, eg. redux-thunk, redux-promise etc.
++ **functionToCall** (Function): function to call when timeout is triggered.
 
 ```javascript
 removeTimeout(ACTION_TO_REMOVE)
