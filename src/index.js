@@ -35,16 +35,11 @@ const reduxTimeout = () => {
     const update = (action) => {
       // check if object is being monitored at the moment
       let monitor = watch[action]
-      if (monitor && monitor.dispatching) {
-        monitor.dispatching = false
-        return
-      }
 
       if (monitor) {
         clearTimeout(monitor.timeoutId)
         
         let timeoutId = setTimeout(() => {
-          monitor.dispatching = true
           store.dispatch(monitor.toDispatch)
         }, monitor.timeout)
 
@@ -67,11 +62,9 @@ const reduxTimeout = () => {
       const monitor = {
         timeout,
         toDispatch,
-        dispatching: false
       }
 
       let timeoutId = setTimeout(() => {
-        monitor.dispatching = true
         store.dispatch(monitor.toDispatch)
       }, monitor.timeout)
 
