@@ -1,6 +1,6 @@
 {
   "name": "redux-timeout",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "description": "Client side session timeout monitoring for redux",
   "main": "lib/index.js",
   "scripts": {
